@@ -1,0 +1,6 @@
+[core]
+    remote = demo_remote
+['remote "remote"']
+    url = D:\workspace\dvc_remote
+['remote "demo_remote"']
+    url = D:\workspace\dvc_remote\demo_remote
