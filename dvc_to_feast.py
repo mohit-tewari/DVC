@@ -128,6 +128,7 @@ def postgres_to_dvc_versioning(schema_name, table_name, parquet_file_name = 'his
     version_name = dvc_git_versioning(parquet_file_name)
     fetch_feature_view_query = 'SELECT * from misc.dbsource_feature_store_mapping where db_source_table_name={table_name}'
     df = pd.read_sql_query(query, con=engine)
+    print("printing feature view query output")
     print(df.head())
     feature_view_name = df['feature_view_name'][0]
     print("feature view name : ", feature_view_name)
