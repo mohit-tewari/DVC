@@ -4,3 +4,4 @@
 /train_updated.csv
 /validation_updated.csv
 /test_updated.csv
+/historical_data_versioned.parquet

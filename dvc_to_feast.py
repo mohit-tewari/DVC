@@ -60,19 +60,20 @@ def csv_to_postgres_demo(df, table_name):
 def dvc_git_versioning(parquet_filename):
     import os 
     from datetime import datetime
+    import git
     git_commit_message = "Update code"
-    git_add_command = "git add ."
+    git_add_command = f"git add ."
     git_commit_command = f'git commit -m "{git_commit_message}"'
     os.system(git_add_command)
     os.system(git_commit_command)
 
-    dvc_add_command = f'dvc add {parquet_filename}'
+    dvc_add_command = f'dvc add --all'
     dvc_commit_command = 'dvc commit -f'
     os.system(dvc_add_command)
     os.system(dvc_commit_command)
 
     current_datetime = datetime.now()
-    formatted_date_time = current_datetime.strftime("%b_%d_%H:%M")
+    formatted_date_time = current_datetime.strftime("%b_%d_%H_%M")
 
     git_tag_name = formatted_date_time  # Replace with your desired version number
     git_tag_command = f'git tag -a {git_tag_name} -m "Tagging version {git_tag_name}"'
@@ -88,7 +89,34 @@ def dvc_git_versioning(parquet_filename):
     os.system(dvc_push_command)
     return git_tag_name
 
-def postgres_to_dvc_versioning(schema_name, table_name, parquet_file_name = 'historical_data_versioned'):
+def dvc_git_versioning_bkp(parquet_file_name):
+    from dvc.repo import Repo
+    import git
+    from datetime import datetime
+    #repo_root = dvc_api.get_repo_root()
+    dvc_repo = Repo()
+    dvc_repo.stage.add(parquet_file_name)
+    dvc_repo.commit('adding changed files in dvc')
+    dvc_repo.push()
+
+    # dvc_api.add(repo_root, recursive=True)
+    # dvc_api.commit(message="Updated data file")
+    # dvc_api.push()
+
+    repo = git.Repo(search_parent_directories=True)
+    repo.git.add("--all")
+    repo.git.commit('-m', 'adding dvc files to git')
+    
+    current_datetime = datetime.now()
+    formatted_date_time = current_datetime.strftime("%b_%d_%H_%M")
+    git_tag_name = formatted_date_time
+    repo.create_tag(git_tag_name)
+    repo.git.push('-u', 'origin', 'main')
+    repo.git.push('--tags')
+    return git_tag_name
+
+
+def postgres_to_dvc_versioning(schema_name, table_name, parquet_file_name = 'historical_data_versioned.parquet'):
     import pandas as pd
     engine = create_engine('postgresql://postgres:docker@localhost:5492/postgres')
     query = f'SELECT * FROM {schema_name}.{table_name}'
@@ -115,9 +143,10 @@ if __name__=="__main__":
         #train_df = pd.read_csv("C:/Users/mohittewari/OneDrive - Nagarro/backup/Desktop/Workspace/Forecasting pipeline - Dec Demo/data/demo_train.csv")
         train_df = pd.read_csv("C:/Users/mohittewari/OneDrive - Nagarro/backup/Desktop/Workspace/Forecasting pipeline - Dec Demo/data/train_small_sanjay.csv")
         val_df = pd.read_csv("C:/Users/mohittewari/OneDrive - Nagarro/backup/Desktop/Workspace/Forecasting pipeline - Dec Demo/data/validate_small_sanjay.csv")
-        combined_df = pd.concat([train_df, val_df], ignore_index=True)
+        #combined_df = pd.concat([train_df, val_df], ignore_index=True)
+        combined_df = pd.concat([train_df], ignore_index=True)
         csv_to_postgres(combined_df,"history")
-        postgres_to_dvc_versioning("offline_schema","history","historical_data_versioned")
+        postgres_to_dvc_versioning("offline_schema","history","historical_data_versioned.parquet")
     elif flag=="real_time":
         print("real time data feeded")
         #test_data = pd.read_csv("C:/Users/mohittewari/OneDrive - Nagarro/backup/Desktop/Workspace/Forecasting pipeline - Dec Demo/data/demo_test.csv")
