@@ -126,7 +126,7 @@ def postgres_to_dvc_versioning(schema_name, table_name, parquet_file_name = 'his
     start_time = df.week.min()
     end_time = df.week.max()
     version_name = dvc_git_versioning(parquet_file_name)
-    fetch_feature_view_query = "SELECT * from misc.dbsource_feature_store_mapping where db_source_table_name='{table_name}'"
+    fetch_feature_view_query = f"SELECT * from misc.dbsource_feature_store_mapping where db_source_table_name='{table_name}'"
     print("fetch_feature_view_query : ",fetch_feature_view_query)
     df = pd.read_sql_query(fetch_feature_view_query, con=engine)
     print("printing feature view query output")
