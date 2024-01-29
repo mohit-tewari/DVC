@@ -5,3 +5,4 @@
 /validation_updated.csv
 /test_updated.csv
 /historical_data_versioned.parquet
+/versioned_data

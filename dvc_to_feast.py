@@ -57,13 +57,13 @@ def csv_to_postgres_demo(df, table_name):
     engine = create_engine('postgresql://postgres:docker@localhost:5492/postgres')
     df.to_sql(table_name, engine, if_exists='append', index=False, schema='offline_schema')
 
-def dvc_git_versioning(parquet_filename):
+def dvc_git_versioning(versioned_directory):
     import os 
     from datetime import datetime
     import git
     
 
-    dvc_add_command = f'dvc add *.parquet'
+    dvc_add_command = f'dvc add {versioned_directory}'
     dvc_commit_command = 'dvc commit -f'
     dvc_push_command = f'dvc push'
     os.system(dvc_add_command)
@@ -130,10 +130,12 @@ def postgres_to_dvc_versioning(schema_name, table_name, parquet_file_name = 'his
     query = f'SELECT * FROM {schema_name}.{table_name}'
     df = pd.read_sql_query(query, con=engine)
     print(df.head())
-    df.to_parquet(parquet_file_name, index=False)
+    versioned_data_dir = "./versioned_data/"
+    df.to_parquet(versioned_data_dir+parquet_file_name, index=False)
     start_time = df.week.min()
     end_time = df.week.max()
-    version_name = dvc_git_versioning(parquet_file_name)
+    # version_name = dvc_git_versioning(parquet_file_name)
+    version_name = dvc_git_versioning(versioned_data_dir)
     fetch_feature_view_query = f"SELECT * from misc.dbsource_feature_store_mapping where db_source_table_name='{table_name}'"
     print("fetch_feature_view_query : ",fetch_feature_view_query)
     df = pd.read_sql_query(fetch_feature_view_query, con=engine)
