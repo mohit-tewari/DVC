@@ -1,6 +1,6 @@
 outs:
-- md5: bca34a1083670b1af2dd8550d25a0128.dir
-  size: 16114
+- md5: 3e5fc5a6fa1d9a3b1fad34f9a7f52f09.dir
+  size: 17542
   nfiles: 1
   hash: md5
   path: versioned_data
