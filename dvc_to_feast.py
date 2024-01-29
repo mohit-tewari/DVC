@@ -63,7 +63,7 @@ def dvc_git_versioning(parquet_filename):
     import git
     
 
-    dvc_add_command = f'dvc add --all'
+    dvc_add_command = f'dvc add *.parquet'
     dvc_commit_command = 'dvc commit -f'
     dvc_push_command = f'dvc push'
     os.system(dvc_add_command)
@@ -156,11 +156,11 @@ if __name__=="__main__":
     if flag=="historical_data":
         print("historical data feeded")
         #train_df = pd.read_csv("C:/Users/mohittewari/OneDrive - Nagarro/backup/Desktop/Workspace/Forecasting pipeline - Dec Demo/data/demo_train.csv")
-        #train_df = pd.read_csv("C:/Users/mohittewari/OneDrive - Nagarro/backup/Desktop/Workspace/Forecasting pipeline - Dec Demo/data/train_small_sanjay.csv")
-        val_df = pd.read_csv("C:/Users/mohittewari/OneDrive - Nagarro/backup/Desktop/Workspace/Forecasting pipeline - Dec Demo/data/validate_small_sanjay.csv")
+        train_df = pd.read_csv("C:/Users/mohittewari/OneDrive - Nagarro/backup/Desktop/Workspace/Forecasting pipeline - Dec Demo/data/train_small_sanjay.csv")
+        #val_df = pd.read_csv("C:/Users/mohittewari/OneDrive - Nagarro/backup/Desktop/Workspace/Forecasting pipeline - Dec Demo/data/validate_small_sanjay.csv")
         #combined_df = pd.concat([train_df, val_df], ignore_index=True)
-        combined_df = pd.concat([val_df], ignore_index=True)
-        #csv_to_postgres(combined_df,"history")
+        combined_df = pd.concat([train_df], ignore_index=True)
+        csv_to_postgres(combined_df,"history")
         postgres_to_dvc_versioning("offline_schema","history","historical_data_versioned.parquet")
     elif flag=="real_time":
         print("real time data feeded")
