@@ -160,7 +160,7 @@ if __name__=="__main__":
         val_df = pd.read_csv("C:/Users/mohittewari/OneDrive - Nagarro/backup/Desktop/Workspace/Forecasting pipeline - Dec Demo/data/validate_small_sanjay.csv")
         #combined_df = pd.concat([train_df, val_df], ignore_index=True)
         combined_df = pd.concat([val_df], ignore_index=True)
-        csv_to_postgres(combined_df,"history")
+        #csv_to_postgres(combined_df,"history")
         postgres_to_dvc_versioning("offline_schema","history","historical_data_versioned.parquet")
     elif flag=="real_time":
         print("real time data feeded")
