@@ -149,7 +149,7 @@ if __name__=="__main__":
         print("historical data feeded")
         #train_df = pd.read_csv("C:/Users/mohittewari/OneDrive - Nagarro/backup/Desktop/Workspace/Forecasting pipeline - Dec Demo/data/demo_train.csv")
         train_df = pd.read_csv("C:/Users/mohittewari/OneDrive - Nagarro/backup/Desktop/Workspace/Forecasting pipeline - Dec Demo/data/train_small_sanjay.csv")
-        val_df = pd.read_csv("C:/Users/mohittewari/OneDrive - Nagarro/backup/Desktop/Workspace/Forecasting pipeline - Dec Demo/data/validate_small_sanjay.csv")
+        #val_df = pd.read_csv("C:/Users/mohittewari/OneDrive - Nagarro/backup/Desktop/Workspace/Forecasting pipeline - Dec Demo/data/validate_small_sanjay.csv")
         #combined_df = pd.concat([train_df, val_df], ignore_index=True)
         combined_df = pd.concat([train_df], ignore_index=True)
         csv_to_postgres(combined_df,"history")
