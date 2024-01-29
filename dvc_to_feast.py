@@ -45,7 +45,7 @@ def csv_to_postgres(df, table_name):
     #df=df.loc[(df["sku_id"].isin([216418,219009]))&(df["store_id"]==8091)]
     df["timestamp"] =  pd.to_datetime(df['timestamp'], format='%Y-%m-%d %H:%M:%S')
     engine = create_engine('postgresql://postgres:docker@localhost:5492/postgres')
-    df.to_sql(table_name, engine, if_exists='replace', index=False, schema='offline_schema')
+    df.to_sql(table_name, engine, if_exists='append', index=False, schema='offline_schema')
 
 def csv_to_postgres_demo(df, table_name):
     print(df.shape)
@@ -148,10 +148,10 @@ if __name__=="__main__":
     if flag=="historical_data":
         print("historical data feeded")
         #train_df = pd.read_csv("C:/Users/mohittewari/OneDrive - Nagarro/backup/Desktop/Workspace/Forecasting pipeline - Dec Demo/data/demo_train.csv")
-        train_df = pd.read_csv("C:/Users/mohittewari/OneDrive - Nagarro/backup/Desktop/Workspace/Forecasting pipeline - Dec Demo/data/train_small_sanjay.csv")
-        #val_df = pd.read_csv("C:/Users/mohittewari/OneDrive - Nagarro/backup/Desktop/Workspace/Forecasting pipeline - Dec Demo/data/validate_small_sanjay.csv")
+        #train_df = pd.read_csv("C:/Users/mohittewari/OneDrive - Nagarro/backup/Desktop/Workspace/Forecasting pipeline - Dec Demo/data/train_small_sanjay.csv")
+        val_df = pd.read_csv("C:/Users/mohittewari/OneDrive - Nagarro/backup/Desktop/Workspace/Forecasting pipeline - Dec Demo/data/validate_small_sanjay.csv")
         #combined_df = pd.concat([train_df, val_df], ignore_index=True)
-        combined_df = pd.concat([train_df], ignore_index=True)
+        combined_df = pd.concat([val_df], ignore_index=True)
         csv_to_postgres(combined_df,"history")
         postgres_to_dvc_versioning("offline_schema","history","historical_data_versioned.parquet")
     elif flag=="real_time":
