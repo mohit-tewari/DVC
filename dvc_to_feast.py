@@ -61,32 +61,40 @@ def dvc_git_versioning(parquet_filename):
     import os 
     from datetime import datetime
     import git
+    
+
+    dvc_add_command = f'dvc add --all'
+    dvc_commit_command = 'dvc commit -f'
+    dvc_push_command = f'dvc push'
+    os.system(dvc_add_command)
+    os.system(dvc_push_command)
+    #os.system(dvc_commit_command)
+
     git_commit_message = "Update code"
-    git_add_command = f"git add ."
+    git_add_command = f"git add --all"
     git_commit_command = f'git commit -m "{git_commit_message}"'
     os.system(git_add_command)
     os.system(git_commit_command)
 
-    dvc_add_command = f'dvc add --all'
-    dvc_commit_command = 'dvc commit -f'
-    os.system(dvc_add_command)
-    os.system(dvc_commit_command)
 
     current_datetime = datetime.now()
     formatted_date_time = current_datetime.strftime("%b_%d_%H_%M")
 
     git_tag_name = formatted_date_time  # Replace with your desired version number
-    git_tag_command = f'git tag -a {git_tag_name} -m "Tagging version {git_tag_name}"'
+    #git_tag_command = f'git tag -a {git_tag_name} -m "Tagging version {git_tag_name}"'
+    git_tag_command = f'git tag {git_tag_name}'
     os.system(git_tag_command)
 
     # Step 4: Push both Git and DVC commits to their respective remotes
-    git_push_command = 'git push origin master'  # Replace 'master' with your branch name
-    git_push_tags_command = 'git push origin --tags'
+    # git_push_command = 'git push origin master'  # Replace 'master' with your branch name
+    # git_push_tags_command = 'git push origin --tags'
+    git_push_command = 'git push -u origin master'  # Replace 'master' with your branch name
+    git_push_tags_command = 'git push --tag'
     remote_repo_name = 'remote'
-    dvc_push_command = f'dvc push -r {remote_repo_name}'  # Replace 'remote-repo' with your DVC remote name
+    #dvc_push_command = f'dvc push -r {remote_repo_name}'  # Replace 'remote-repo' with your DVC remote name
     os.system(git_push_command)
     os.system(git_push_tags_command)
-    os.system(dvc_push_command)
+    
     return git_tag_name
 
 def dvc_git_versioning_bkp(parquet_file_name):
@@ -148,10 +156,10 @@ if __name__=="__main__":
     if flag=="historical_data":
         print("historical data feeded")
         #train_df = pd.read_csv("C:/Users/mohittewari/OneDrive - Nagarro/backup/Desktop/Workspace/Forecasting pipeline - Dec Demo/data/demo_train.csv")
-        #train_df = pd.read_csv("C:/Users/mohittewari/OneDrive - Nagarro/backup/Desktop/Workspace/Forecasting pipeline - Dec Demo/data/train_small_sanjay.csv")
-        val_df = pd.read_csv("C:/Users/mohittewari/OneDrive - Nagarro/backup/Desktop/Workspace/Forecasting pipeline - Dec Demo/data/validate_small_sanjay.csv")
+        train_df = pd.read_csv("C:/Users/mohittewari/OneDrive - Nagarro/backup/Desktop/Workspace/Forecasting pipeline - Dec Demo/data/train_small_sanjay.csv")
+        #val_df = pd.read_csv("C:/Users/mohittewari/OneDrive - Nagarro/backup/Desktop/Workspace/Forecasting pipeline - Dec Demo/data/validate_small_sanjay.csv")
         #combined_df = pd.concat([train_df, val_df], ignore_index=True)
-        combined_df = pd.concat([val_df], ignore_index=True)
+        combined_df = pd.concat([train_df], ignore_index=True)
         csv_to_postgres(combined_df,"history")
         postgres_to_dvc_versioning("offline_schema","history","historical_data_versioned.parquet")
     elif flag=="real_time":
